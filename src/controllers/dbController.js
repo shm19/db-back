@@ -4,6 +4,7 @@ const {
   testPostgresConnection,
 } = require("../utils/dbUtils");
 
+// Test Database Connection
 const testConnection = async (req, res) => {
   const { dbType, host, port, username, password, connectionUrl } = req.body;
   console.log(req.body);

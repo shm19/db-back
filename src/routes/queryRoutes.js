@@ -3,7 +3,7 @@ const { executeQuery } = require("../controllers/queryController");
 
 const router = express.Router();
 
-// Execute SQL Query
+// Execute query
 router.post("/execute-query", executeQuery);
 
 module.exports = router;

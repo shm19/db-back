@@ -3,7 +3,7 @@ const { testConnection } = require("../controllers/dbController");
 
 const router = express.Router();
 
-// Test Database Connection
+// Test database connection
 router.post("/test-connection", testConnection);
 
 module.exports = router;

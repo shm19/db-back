@@ -2,7 +2,6 @@ const sqlite3 = require("sqlite3").verbose();
 const mysql = require("mysql2/promise");
 const { Client } = require("pg");
 
-// Test SQLite Connection
 const testSQLiteConnection = (connectionUrl) => {
   return new Promise((resolve, reject) => {
     if (!connectionUrl) {
@@ -18,7 +17,6 @@ const testSQLiteConnection = (connectionUrl) => {
   });
 };
 
-// Test MySQL Connection
 const testMySQLConnection = async (host, port, username, password) => {
   if (!host || !username || !password || !port) {
     throw new Error("MySQL connection requires host, port, username, and password.");
@@ -33,7 +31,6 @@ const testMySQLConnection = async (host, port, username, password) => {
   return "MySQL connection successful.";
 };
 
-// Test PostgreSQL Connection
 const testPostgresConnection = async (host, port, username, password) => {
   if (!host || !username || !password || !port) {
     throw new Error("PostgreSQL connection requires host, port, username, and password.");
@@ -49,7 +46,6 @@ const testPostgresConnection = async (host, port, username, password) => {
   return "PostgreSQL connection successful.";
 };
 
-// Execute SQLite Query
 const executeSQLiteQuery = (connectionUrl, query) => {
   return new Promise((resolve, reject) => {
     const db = new sqlite3.Database(connectionUrl, (err) => {
@@ -58,6 +54,7 @@ const executeSQLiteQuery = (connectionUrl, query) => {
       }
     });
 
+    console.log("sqllite execute query", query);
     db.all(query, [], (err, rows) => {
       if (err) {
         db.close();
@@ -69,7 +66,9 @@ const executeSQLiteQuery = (connectionUrl, query) => {
   });
 };
 
-// Execute MySQL Query
+/**
+ * Execute MySQL Query
+ */
 const executeMySQLQuery = async (host, port, username, password, query) => {
   const connection = await mysql.createConnection({
     host,
@@ -82,7 +81,6 @@ const executeMySQLQuery = async (host, port, username, password, query) => {
   return rows;
 };
 
-// Execute PostgreSQL Query
 const executePostgresQuery = async (host, port, username, password, query) => {
   const client = new Client({
     host,

@@ -4,19 +4,39 @@ const { executeSQLiteQuery, executeMySQLQuery, executePostgresQuery } = require(
 const executeQuery = async (req, res) => {
   const { dbType, host, port, username, password, connectionUrl, query } = req.body;
   console.log(req.body);
+
   if (!query) {
     return res.status(400).json({ error: "No query provided." });
   }
 
   try {
+    const sanitizedQuery = query
+      .split("\n")
+      .filter((line) => !line.trim().startsWith("--"))
+      .join(" ")
+      .trim()
+      .replace(/\s+/g, " ");
+
+    const queries = sanitizedQuery.split(";").filter((q) => q.trim());
+    console.log("queries", queries);
+    if (queries.length > 1) {
+      return res
+        .status(400)
+        .json({ error: "Multiple queries are not allowed. Please provide a single query." });
+    }
+
+    // Extract the single sanitized query
+    const singleQuery = queries[0] + ";";
+
     let result;
 
+    // Execute the query based on database type
     if (dbType === "sqlite") {
-      result = await executeSQLiteQuery(connectionUrl, query);
+      result = await executeSQLiteQuery(connectionUrl, singleQuery);
     } else if (dbType === "mysql") {
-      result = await executeMySQLQuery(host, port, username, password, query);
+      result = await executeMySQLQuery(host, port, username, password, singleQuery);
     } else if (dbType === "postgres") {
-      result = await executePostgresQuery(host, port, username, password, query);
+      result = await executePostgresQuery(host, port, username, password, singleQuery);
     } else {
       throw new Error("Unsupported database type.");
     }
