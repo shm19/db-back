@@ -1,14 +1,16 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const routes = require("./routes");
+const morgan = require("morgan");
 
 const app = express();
 const PORT = 8000;
 
 // Middleware
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // Routes
 app.use("/api", routes);
