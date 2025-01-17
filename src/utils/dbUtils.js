@@ -54,15 +54,38 @@ const executeSQLiteQuery = (connectionUrl, query) => {
       }
     });
 
-    console.log("sqllite execute query", query);
-    db.all(query, [], (err, rows) => {
-      if (err) {
+    console.log("SQLite executing query:", query);
+
+    const queryType = query.trim().split(" ")[0].toUpperCase();
+
+    if (queryType === "SELECT") {
+      db.all(query, [], (err, rows) => {
+        if (err) {
+          db.close();
+          return reject(new Error(`SQLite SELECT query failed: ${err.message}`));
+        }
         db.close();
-        return reject(new Error(`SQLite query failed: ${err.message}`));
-      }
-      db.close();
-      resolve(rows);
-    });
+        resolve(rows); // Return rows for SELECT
+      });
+    } else if (queryType === "DELETE" || queryType === "UPDATE") {
+      db.run(query, function (err) {
+        if (err) {
+          db.close();
+          return reject(new Error(`SQLite ${queryType} query failed: ${err.message}`));
+        }
+        db.close();
+        resolve({ changes: this.changes }); // Return number of affected rows
+      });
+    } else {
+      db.run(query, function (err) {
+        if (err) {
+          db.close();
+          return reject(new Error(`SQLite query failed: ${err.message}`));
+        }
+        db.close();
+        resolve({ message: "Query executed successfully." }); // Return success for other queries
+      });
+    }
   });
 };
 
