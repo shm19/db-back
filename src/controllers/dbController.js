@@ -77,18 +77,73 @@ const getSQLiteTablesAndShapes = (connectionUrl) => {
     });
   });
 };
+const { Client } = require("pg");
+
+const getPostgresTablesAndShapes = async ({ host, port, username, password }) => {
+  const client = new Client({
+    host,
+    port,
+    user: username,
+    password,
+  });
+
+  try {
+    await client.connect();
+
+    // Fetch all tables in the public schema
+    const tablesResult = await client.query(`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+    `);
+
+    const tableShapes = {};
+
+    // Process each table to fetch its columns
+    for (const row of tablesResult.rows) {
+      const tableName = row.table_name;
+
+      const columnsResult = await client.query(
+        `
+        SELECT column_name, data_type, is_nullable, column_default
+        FROM information_schema.columns
+        WHERE table_name = $1
+      `,
+        [tableName]
+      );
+
+      tableShapes[tableName] = columnsResult.rows.map((col) => ({
+        name: col.column_name,
+        type: col.data_type,
+        notnull: col.is_nullable === "NO" ? 1 : 0,
+        defaultValue: col.column_default,
+      }));
+    }
+
+    return tableShapes;
+  } catch (error) {
+    throw new Error(`PostgreSQL error: ${error.message}`);
+  } finally {
+    await client.end();
+  }
+};
 
 const getDatabaseSchema = async (req, res) => {
   const { dbType, connectionUrl } = req.body;
-  if (dbType !== "sqlite") {
+  if (dbType !== "sqlite" && dbType !== "postgres") {
     return res
       .status(400)
       .json({ error: "Currently, only SQLite is supported for schema retrieval." });
   }
-
   try {
-    const schema = await getSQLiteTablesAndShapes(connectionUrl);
-    console.log("schema", schema);
+    let schema;
+    if (dbType === "sqlite") {
+      schema = await getSQLiteTablesAndShapes(connectionUrl);
+    } else if (dbType === "postgres") {
+      const { host, port, username, password } = req.body;
+      schema = await getPostgresTablesAndShapes({ host, port, username, password });
+      console.log("schema", schema);
+    }
     return res.status(200).json({ schema });
   } catch (error) {
     return res.status(400).json({ error: error.message });

@@ -3,8 +3,10 @@ const { executeSQLiteQuery, executeMySQLQuery, executePostgresQuery } = require(
 // Execute Query
 const executeQuery = async (req, res) => {
   const { dbType, host, port, username, password, connectionUrl, query } = req.body;
-  console.log(req.body);
 
+  if ((!dbType && !connectionUrl) || (!host && !port && !username && !password)) {
+    return res.status(400).json({ error: "Database config is required." });
+  }
   if (!query) {
     return res.status(400).json({ error: "No query provided." });
   }

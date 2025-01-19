@@ -111,11 +111,32 @@ const executePostgresQuery = async (host, port, username, password, query) => {
     user: username,
     password,
   });
-  await client.connect();
-  const result = await client.query(query);
-  await client.end();
-  return result.rows;
+
+  try {
+    console.log("PostgreSQL executing query:", query);
+    await client.connect();
+
+    const queryType = query.trim().split(" ")[0].toUpperCase();
+
+    if (queryType === "SELECT" || queryType === "WITH") {
+      const result = await client.query(query);
+      return result.rows; // Return rows for SELECT
+    } else if (queryType === "DELETE" || queryType === "UPDATE") {
+      const result = await client.query(query);
+      return { changes: result.rowCount }; // Return number of affected rows
+    } else {
+      await client.query(query);
+      return { message: "Query executed successfully." };
+    }
+  } catch (error) {
+    console.error(`PostgreSQL query failed: ${error.message}`);
+    throw new Error(`PostgreSQL query failed: ${error.message}`);
+  } finally {
+    await client.end();
+  }
 };
+
+module.exports = { executePostgresQuery };
 
 module.exports = {
   testSQLiteConnection,
