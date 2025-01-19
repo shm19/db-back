@@ -1,9 +1,12 @@
 const express = require("express");
-const { executeQuery } = require("../controllers/queryController");
-
+const { executeQuery, getSchema } = require("../controllers/queryController");
 const router = express.Router();
 
-// Execute query
+/**
+ * Execute a database query
+ */
 router.post("/execute-query", executeQuery);
+
+router.post("/get-schema", getSchema);
 
 module.exports = router;

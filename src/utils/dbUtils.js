@@ -2,50 +2,6 @@ const sqlite3 = require("sqlite3").verbose();
 const mysql = require("mysql2/promise");
 const { Client } = require("pg");
 
-const testSQLiteConnection = (connectionUrl) => {
-  return new Promise((resolve, reject) => {
-    if (!connectionUrl) {
-      return reject(new Error("SQLite connection URL (file path) is required."));
-    }
-    const db = new sqlite3.Database(connectionUrl, (err) => {
-      if (err) {
-        return reject(new Error(`SQLite connection failed: ${err.message}`));
-      }
-      db.close();
-      resolve("SQLite connection successful.");
-    });
-  });
-};
-
-const testMySQLConnection = async (host, port, username, password) => {
-  if (!host || !username || !password || !port) {
-    throw new Error("MySQL connection requires host, port, username, and password.");
-  }
-  const connection = await mysql.createConnection({
-    host,
-    port,
-    user: username,
-    password,
-  });
-  await connection.end();
-  return "MySQL connection successful.";
-};
-
-const testPostgresConnection = async (host, port, username, password) => {
-  if (!host || !username || !password || !port) {
-    throw new Error("PostgreSQL connection requires host, port, username, and password.");
-  }
-  const client = new Client({
-    host,
-    port,
-    user: username,
-    password,
-  });
-  await client.connect();
-  await client.end();
-  return "PostgreSQL connection successful.";
-};
-
 const executeSQLiteQuery = (connectionUrl, query) => {
   return new Promise((resolve, reject) => {
     const db = new sqlite3.Database(connectionUrl, (err) => {
@@ -134,15 +90,4 @@ const executePostgresQuery = async (host, port, username, password, query) => {
   } finally {
     await client.end();
   }
-};
-
-module.exports = { executePostgresQuery };
-
-module.exports = {
-  testSQLiteConnection,
-  testMySQLConnection,
-  testPostgresConnection,
-  executeSQLiteQuery,
-  executeMySQLQuery,
-  executePostgresQuery,
 };
