@@ -91,7 +91,7 @@ const getSQLiteSchema = ({ connectionUrl }) => {
   });
 };
 
-const testSQLiteConnection = (connectionUrl) => {
+const testSQLiteConnection = ({ connectionUrl }) => {
   return new Promise((resolve, reject) => {
     if (!connectionUrl) {
       return reject(new Error("SQLite connection URL (file path) is required."));

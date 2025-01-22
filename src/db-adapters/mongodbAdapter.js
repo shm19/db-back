@@ -103,10 +103,9 @@ const executeMongoQuery = async ({ connectionUrl, query }) => {
 const getMongoSchema = async ({ connectionUrl }) => {
   console.log("Fetching MongoDB schema...", connectionUrl);
 
-  const connection = await mongoose.createConnection(connectionUrl);
-
+  const client = new MongoClient(connectionUrl);
   try {
-    const client = connection.getClient();
+    await client.connect();
     const db = client.db();
 
     const collections = await db.listCollections().toArray();
@@ -121,7 +120,7 @@ const getMongoSchema = async ({ connectionUrl }) => {
     console.error("Failed to fetch MongoDB schema:", error.message);
     throw new Error(`Failed to fetch MongoDB schema: ${error.message}`);
   } finally {
-    await connection.close();
+    await client.close();
   }
 };
 
@@ -131,16 +130,16 @@ const getMongoSchema = async ({ connectionUrl }) => {
 const testMongoConnection = async ({ connectionUrl }) => {
   console.log("Testing MongoDB connection...");
 
-  const connection = await mongoose.createConnection(connectionUrl);
+  const client = new MongoClient(connectionUrl);
 
   try {
-    await connection.asPromise();
+    await client.connect();
     return "MongoDB connection test successful";
   } catch (error) {
     console.error("MongoDB connection test failed:", error.message);
     throw new Error(`MongoDB connection test failed: ${error.message}`);
   } finally {
-    await connection.close();
+    await client.close();
   }
 };
 

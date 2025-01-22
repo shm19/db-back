@@ -13,6 +13,7 @@ const executeQuery = async (req, res) => {
   try {
     const adapter = getAdapterByName(dbType);
     const result = await adapter.executeQuery({ ...connectionDetails, query });
+    console.log(result);
     return res.status(200).json({ data: result });
   } catch (error) {
     console.error("Query execution failed:", error.message);
