@@ -1,8 +1,5 @@
 const { getAdapterByName } = require("../plugins/dbPluginRegistry");
 
-/**
- * Execute a database query
- */
 const executeQuery = async (req, res) => {
   const { dbType, query, ...connectionDetails } = req.body;
 
@@ -21,9 +18,6 @@ const executeQuery = async (req, res) => {
   }
 };
 
-/**
- * Get database schema
- */
 const getSchema = async (req, res) => {
   const { dbType, ...connectionDetails } = req.body;
 

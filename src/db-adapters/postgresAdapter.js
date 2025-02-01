@@ -1,8 +1,5 @@
 const { Client } = require("pg");
 
-/**
- * Execute a PostgreSQL query
- */
 const executePostgresQuery = async ({ host, port, username, password, query }) => {
   console.log("PostgreSQL executing query:", host, port, username, password, query);
   const client = new Client({
@@ -34,9 +31,6 @@ const executePostgresQuery = async ({ host, port, username, password, query }) =
   }
 };
 
-/**
- * Get PostgreSQL schema (tables and their shapes)
- */
 const getPostgresSchema = async ({ host, port, username, password }) => {
   console.log("Fetching PostgreSQL schema...", host, port, username, password);
 

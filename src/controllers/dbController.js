@@ -1,8 +1,5 @@
 const { getAdapterByName } = require("../plugins/dbPluginRegistry");
 
-/**
- * Test database connection
- */
 const testConnection = async (req, res) => {
   const { dbType, ...connectionDetails } = req.body;
   console.log("test database connection", dbType, connectionDetails);

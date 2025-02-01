@@ -1,5 +1,5 @@
 const express = require("express");
-const { getSchema, executeQuery, testConnection } = require("../controllers/dbController");
+const { testConnection } = require("../controllers/dbController");
 
 const router = express.Router();
 
