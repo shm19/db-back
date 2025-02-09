@@ -81,7 +81,7 @@ const getPostgresSchema = async ({ host, port, username, password }) => {
   }
 };
 
-const testPostgresConnection = async (host, port, username, password) => {
+const testPostgresConnection = async ({ host, port, username, password }) => {
   if (!host || !username || !password || !port) {
     throw new Error("PostgreSQL connection requires host, port, username, and password.");
   }

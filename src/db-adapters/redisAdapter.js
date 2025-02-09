@@ -1,8 +1,5 @@
 const Redis = require("ioredis");
 
-/**
- * Execute a Redis query
- */
 const executeRedisQuery = async ({ connectionUrl, query }) => {
   console.log("Redis executing query:", query);
 
@@ -13,7 +10,6 @@ const executeRedisQuery = async ({ connectionUrl, query }) => {
   const redis = new Redis(connectionUrl);
 
   try {
-    // Parse the query
     const [command, ...args] = query.trim().split(/\s+/);
     const normalizedCommand = command.toLowerCase();
 
@@ -21,7 +17,6 @@ const executeRedisQuery = async ({ connectionUrl, query }) => {
       throw new Error(`Unsupported Redis command: ${command}`);
     }
 
-    // Execute the command
     let result = await redis[normalizedCommand](...args);
     if (!result || result.length === 0 || Object.keys(result).length === 0) {
       return "No result";
@@ -48,9 +43,6 @@ const executeRedisQuery = async ({ connectionUrl, query }) => {
   }
 };
 
-/**
- * Get Redis schema (list of keys and types)
- */
 const getRedisSchema = async ({ connectionUrl }) => {
   console.log("Fetching Redis schema...", connectionUrl);
 

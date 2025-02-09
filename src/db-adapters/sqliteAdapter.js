@@ -62,7 +62,7 @@ const getSQLiteSchema = ({ connectionUrl }) => {
       const processTable = (tableIndex) => {
         if (tableIndex >= tables.length) {
           db.close();
-          return resolve(tableShapes); // Resolve once all tables are processed
+          return resolve(tableShapes);
         }
 
         const tableName = tables[tableIndex].name;
@@ -82,11 +82,11 @@ const getSQLiteSchema = ({ connectionUrl }) => {
             defaultValue: col.dflt_value,
           }));
 
-          processTable(tableIndex + 1); // Process the next table
+          processTable(tableIndex + 1);
         });
       };
 
-      processTable(0); // Start processing the tables
+      processTable(0);
     });
   });
 };

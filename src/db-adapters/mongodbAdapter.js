@@ -14,10 +14,8 @@ const executeMongoQuery = async ({ connectionUrl, query }) => {
   try {
     await client.connect();
 
-    // Normalize query: Remove newlines and extra spaces
     const normalizedQuery = query.replace(/\s+/g, " ").trim();
 
-    // Extract collection name, method, and parameters
     const queryRegex = /^db\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\((.*)\)$/;
     const match = queryRegex.exec(normalizedQuery);
 
@@ -27,10 +25,9 @@ const executeMongoQuery = async ({ connectionUrl, query }) => {
 
     const [, collectionName, method, paramString] = match;
 
-    const db = client.db(); // Database inferred from connection URL
+    const db = client.db();
     const collection = db.collection(collectionName);
 
-    // Safely evaluate the parameter string with `ObjectId` handling
     let parsedParams;
     try {
       parsedParams = paramString
@@ -97,9 +94,6 @@ const executeMongoQuery = async ({ connectionUrl, query }) => {
   }
 };
 
-/**
- * Get MongoDB schema (list of collections)
- */
 const getMongoSchema = async ({ connectionUrl }) => {
   console.log("Fetching MongoDB schema...", connectionUrl);
 
@@ -124,9 +118,6 @@ const getMongoSchema = async ({ connectionUrl }) => {
   }
 };
 
-/**
- * Test MongoDB connection
- */
 const testMongoConnection = async ({ connectionUrl }) => {
   console.log("Testing MongoDB connection...");
 
