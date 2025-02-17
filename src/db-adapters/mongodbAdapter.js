@@ -139,4 +139,5 @@ module.exports = {
   executeQuery: executeMongoQuery,
   getSchema: getMongoSchema,
   testConnection: testMongoConnection,
+  isSql: async () => false,
 };

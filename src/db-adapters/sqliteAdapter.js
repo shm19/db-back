@@ -111,4 +111,5 @@ module.exports = {
   executeQuery: executeSQLiteQuery,
   getSchema: getSQLiteSchema,
   testConnection: testSQLiteConnection,
+  isSql: () => true,
 };

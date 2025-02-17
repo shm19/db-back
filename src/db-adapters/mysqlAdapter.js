@@ -98,4 +98,5 @@ module.exports = {
   executeQuery: executeMySQLQuery,
   getSchema: getMySQLSchema,
   testConnection: testMySQLConnection,
+  isSql: () => true,
 };

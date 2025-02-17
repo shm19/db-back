@@ -1,4 +1,5 @@
 const { Client } = require("pg");
+const { isSql } = require("./mysqlAdapter");
 
 const executePostgresQuery = async ({ host, port, username, password, query }) => {
   console.log("PostgreSQL executing query:", host, port, username, password, query);
@@ -101,4 +102,5 @@ module.exports = {
   executeQuery: executePostgresQuery,
   getSchema: getPostgresSchema,
   testConnection: testPostgresConnection,
+  isSql: () => true,
 };

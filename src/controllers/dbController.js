@@ -24,4 +24,22 @@ const testConnection = async (req, res) => {
   }
 };
 
-module.exports = { testConnection };
+const isSql = async (req, res) => {
+  const { dbType } = req.body;
+
+  if (!dbType) {
+    return res.status(400).json({ error: "Database type is required" });
+  }
+
+  try {
+    const adapter = getAdapterByName(dbType);
+    const isSql = await adapter.isSql();
+    console.log(isSql);
+    return res.status(200).json({ isSql });
+  } catch (error) {
+    console.error("Connection test failed:", error.message);
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { testConnection, isSql };

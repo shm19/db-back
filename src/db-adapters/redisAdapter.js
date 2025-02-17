@@ -90,4 +90,5 @@ module.exports = {
   executeQuery: executeRedisQuery,
   getSchema: getRedisSchema,
   testConnection: testRedisConnection,
+  isSql: () => false,
 };

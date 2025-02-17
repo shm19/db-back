@@ -8,4 +8,7 @@ module.exports.validateAdapterStructure = (adapter) => {
   if (typeof adapter.testConnection !== "function") {
     throw new Error("Adapter must implement 'testConnection' method.");
   }
+  if (typeof adapter.isSql !== "function") {
+    throw new Error("Adapter must implement 'isSql' method.");
+  }
 };
